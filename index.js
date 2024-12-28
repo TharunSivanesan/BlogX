@@ -53,21 +53,35 @@ app.post("/submit",(req,res)=>{
         title:req.body["title"],
         blogcontent:req.body["blogcontent"]
     });
-    console.log(req.body["title"],req.body["blogcontent"]);
-    console.log(blogs);
     res.locals.data=blogs;
     res.redirect("/blogs");
 });
 
-app.post("/action", (req, res) => {
-    var id=req.body.action;
-    if (id >= 0 && id < blogs.length) {
-        blogs.splice(id, 1);
-    } else {
-        res.status(404).send("Blog not found");
-    }
+app.post("/edit",(req,res)=>{
+    var id=req.body.edit;
+    var title=req.body.title;
+    var blogcontent=req.body.blogcontent;
+    blogs[id]={title:title,blogcontent:blogcontent};
     res.redirect("/blogs");
 });
+
+app.post("/action", (req, res) => {
+    var id;
+    if(req.body.delete){
+        var id=req.body.delete;
+        if (id >= 0 && id < blogs.length) {
+            blogs.splice(id, 1);
+        } else {
+            res.status(404).send("Blog not found");
+        }
+        res.redirect("/blogs");
+    }
+    else if(req.body.edit){
+        var id=req.body.edit;
+        res.render("edit.ejs",{blog:blogs[id],id:id});
+    }
+});
+
   
 app.listen(port,()=>{
     console.log(`Listening on port ${port}`);

@@ -15,12 +15,12 @@
                                     <%= element.blogcontent %>
                                 </p>
                             </div>
-                            <div class="m-auto mb-2 ">
+                            <div class="m-auto pt-2">
                                 <form action="/action" method="POST" class="buttons">
-                                    <!-- <button class="btn btn-secondary btn-sm "type="submit" value="chicken" name="choice" data-id="">
+                                    <button class="btn btn-secondary btn-sm "type="submit" value="<%= i %>" name="edit" data-id="">
                                         Edit
-                                    </button> -->
-                                    <button class="btn btn-danger btn-sm delete-btn" type="submit" value="<%= i %>" name="action" data-id="<%= i %>">
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-btn" type="submit" value="<%= i %>" name="delete" data-id="<%= i %>">
                                         Delete
                                     </button>
                                 </form>
