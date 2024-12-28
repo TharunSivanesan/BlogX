@@ -1,0 +1,45 @@
+.logo,.nav-link,.bloglink{
+    color: #6D67E4;
+}
+body{
+    height: 100vh;
+    margin: 0;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    background-color: #453C67;
+    min-height: 700px;
+    height: auto;
+}
+
+h1,h5{
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: italic;
+    color: #F2F7A1;
+    padding: 1rem;
+}
+
+p {
+    font-family: "Noto Sans", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: italic;
+    font-variation-settings:"wdth" 100;
+    color: #F2F7A1;
+    padding: 1rem;
+}
+
+.textbox,
+#floatingPassword {
+    height: 200px;
+    padding-top: 10px; /* Ensures text starts from the top */
+    box-sizing: border-box; /* Ensures padding is included in height calculation */
+}
+
+.card{
+    background-color: #46C2CB;
+}
