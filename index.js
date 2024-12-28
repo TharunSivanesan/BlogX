@@ -27,9 +27,6 @@ const blogs = [
     }
 ];
 
-console.log(blogs);
-
-
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -62,15 +59,14 @@ app.post("/submit",(req,res)=>{
     res.redirect("/blogs");
 });
 
-app.delete("/delete/:id", (req, res) => {
-    const id = req.params.id;
+app.post("/action", (req, res) => {
+    var id=req.body.action;
     if (id >= 0 && id < blogs.length) {
-        blogs.splice(id, 1); // Remove the blog at the given index
-        console.log(`Blog with ID ${id} deleted`);
-        res.status(200).send("Blog deleted successfully");
+        blogs.splice(id, 1);
     } else {
         res.status(404).send("Blog not found");
     }
+    res.redirect("/blogs");
 });
   
 app.listen(port,()=>{
