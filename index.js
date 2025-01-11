@@ -1,84 +1,73 @@
 import express from "express";
 import bodyParser from "body-parser";
+import axios from "axios";
+import pg from "pg";
 
 const app=express();
 const port=3000;
+const db=new pg.Client({
+    user:"postgres",
+    host:"localhost",
+    database:"blogx",
+    password:"Tharun03",
+    port:"5433"
+});
+db.connect();
 
-const blogs = [
-    {
-        title: "The Importance of Morning Routines",
-        blogcontent: "Starting your day with a structured morning routine can improve productivity and mental clarity. A simple morning routine can include waking up early, meditating, having a nutritious breakfast, and setting goals for the day. These practices can set a positive tone for the rest of your day."
-    },
-    {
-        title: "Top 5 JavaScript Frameworks in 2024",
-        blogcontent: "The JavaScript ecosystem is constantly evolving. In 2024, some of the top frameworks include React, Vue.js, Angular, Svelte, and Next.js. Each of these frameworks offers unique features for building modern web applications, such as server-side rendering, state management, and efficient component-based architectures."
-    },
-    {
-        title: "Exploring the World of Artificial Intelligence",
-        blogcontent: "Artificial Intelligence (AI) is transforming various industries, from healthcare to finance. Machine learning, a subset of AI, enables systems to learn from data and improve over time. Recent advancements in AI have led to innovations like chatbots, personalized recommendations, and autonomous vehicles."
-    },
-    {
-        title: "How to Stay Motivated While Working from Home",
-        blogcontent: "Working from home has its challenges, including staying motivated and focused. To overcome these, establish a dedicated workspace, set a daily schedule, and take regular breaks to recharge. Staying connected with colleagues and setting boundaries between work and personal life can also help maintain a healthy balance."
-    },
-    {
-        title: "The Benefits of Reading Fiction",
-        blogcontent: "Reading fiction offers more than just entertainment; it enhances empathy, creativity, and cognitive function. Studies show that people who read fiction regularly can better understand others' emotions and viewpoints. Moreover, fiction stimulates the imagination and encourages deeper thought processes."
-    }
-];
-
+async function getBlogs(){
+    const data=await db.query("select * from blogs order by id;");
+    console.log(data.rows);
+    return data.rows;
+}
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
+const blogs = await getBlogs();
 
-app.get("/",(req,res)=>{
-    res.render("index.ejs");
+app.get("/",async (req,res)=>{
+    const blogs = await getBlogs();
+    const response=await axios.get("https://bible-api.com/data/web/random");
+    const result=response.data.random_verse;
+    console.log(result);
+    res.render("index.ejs",{chapter:result.chapter,verse:result.verse,text:result.text});
 });
-app.get("/blogs",(req,res)=>{
-    res.locals.data=blogs;
-    res.render("blogs.ejs");
+app.get("/blogs",async (req,res)=>{
+    const blogs = await getBlogs();
+    res.render("blogs.ejs",{data:blogs});
 });
 app.get("/create",(req,res)=>{
     res.render("create.ejs");
 });
 
-for (let index = 0; index < blogs.length; index++) {
-    app.get("/blog"+index,(req,res)=>{
-        res.locals.data=blogs[index];
-        res.render("blog.ejs");
-    })
-}
+app.get("/blog:id",(req,res)=>{
+    const blog=blogs.find((item)=>item.id==req.params.id);
+    console.log(blog);
+    res.render("blog.ejs",{data:blog});
+})
 
-app.post("/submit",(req,res)=>{
-    blogs.push({
-        title:req.body["title"],
-        blogcontent:req.body["blogcontent"]
-    });
-    res.locals.data=blogs;
+app.post("/submit",async(req,res)=>{
+    await db.query("insert into blogs(title,text) values ($1,$2);",[req.body.title,req.body.text]);
     res.redirect("/blogs");
 });
 
-app.post("/edit",(req,res)=>{
+app.post("/edit",async(req,res)=>{
     var id=req.body.edit;
     var title=req.body.title;
-    var blogcontent=req.body.blogcontent;
-    blogs[id]={title:title,blogcontent:blogcontent};
+    var text=req.body.text;
+    await db.query("update blogs set title=$1,text=$2 where id=$3;",[title,text,id]);
     res.redirect("/blogs");
 });
 
-app.post("/action", (req, res) => {
-    var id;
+app.post("/action", async (req, res) => {
     if(req.body.delete){
         var id=req.body.delete;
-        if (id >= 0 && id < blogs.length) {
-            blogs.splice(id, 1);
-        } else {
-            res.status(404).send("Blog not found");
-        }
+        await db.query("delete from blogs where id=$1",[id]);
         res.redirect("/blogs");
     }
-    else if(req.body.edit){
-        var id=req.body.edit;
-        res.render("edit.ejs",{blog:blogs[id],id:id});
+    else{
+        var id=parseInt(req.body.edit);
+        const blog=blogs.find(blog=>blog.id==id);
+        console.log(blog);
+        res.render("edit.ejs",{blog:blog});
     }
 });
 

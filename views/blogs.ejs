@@ -3,24 +3,24 @@
 <section class="content py-5">
     <div class="container">
         <div class="row g-4 m-2">
-            <% var i=0; locals.data.forEach((element) => { %>
+            <% for(let element of data){ %>
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card h-100 border-0 shadow ">
                         <div class="card-body d-flex flex-column px-3">
-                            <h5 class="card-title text-center mb-3">
-                                <a class="bloglink" href="/blog<%= i %>"><%= element.title %></a>
+                            <h5 class="card-title text-center mb-3 p-2">
+                                <a class="bloglink" href="/blog<%= element.id %>"><%= element.title %></a>
                             </h5>
-                            <div class="card-text overflow-auto" style="max-height: 200px;">
+                            <div class="card-text overflow-auto p-2" style="max-height: 200px;">
                                 <p>
-                                    <%= element.blogcontent %>
+                                    <%= element.text %>
                                 </p>
                             </div>
                             <div class="m-auto pt-2">
                                 <form action="/action" method="POST" class="buttons">
-                                    <button class="btn btn-secondary btn-sm "type="submit" value="<%= i %>" name="edit" data-id="">
+                                    <button class="btn btn-secondary btn-sm "type="submit" value="<%= element.id %>" name="edit" data-id="">
                                         Edit
                                     </button>
-                                    <button class="btn btn-danger btn-sm delete-btn" type="submit" value="<%= i %>" name="delete" data-id="<%= i %>">
+                                    <button class="btn btn-danger btn-sm delete-btn" type="submit" value="<%= element.id %>" name="delete">
                                         Delete
                                     </button>
                                 </form>
@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-            <% i++;}); %>
+            <%}%>
         </div>
     </div>
 </section>

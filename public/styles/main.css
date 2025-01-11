@@ -14,13 +14,12 @@ body{
     height: auto;
 }
 
-h1,h5{
+h1,h2,h3,h5{
     font-family: "Montserrat", serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: italic;
     color: #F2F7A1;
-    padding: 1rem;
 }
 
 p {
@@ -30,7 +29,6 @@ p {
     font-style: italic;
     font-variation-settings:"wdth" 100;
     color: #F2F7A1;
-    padding: 1rem;
 }
 
 .textbox,

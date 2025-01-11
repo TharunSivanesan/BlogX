@@ -10,10 +10,10 @@
                     <label for="floatingInput">Title</label>
                 </div>
                 <div class="form-floating mb-4">
-                    <textarea class="form-control textbox" id="floatingContent" placeholder="Blog content" style="height: 200px;" name="blogcontent"><%= blog.blogcontent %></textarea>
+                    <textarea class="form-control textbox" id="floatingContent" placeholder="Blog content" style="height: 200px;" name="text"><%= blog.text %></textarea>
                     <label for="floatingContent">Blog content</label>
                 </div>
-                <button class="btn btn-primary py-2 mt-2 w-100" type="submit" name="edit" value="<%= id  %>">Update</button>
+                <button class="btn btn-primary py-2 mt-2 w-100" type="submit" name="edit" value="<%= blog.id  %>">Update</button>
             </form>
         </div>
     </div>
